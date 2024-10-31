@@ -1,11 +1,12 @@
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, Pressable } from 'react-native';
 import React from 'react';
 import data from 'assets/data.json';
 import BlogCard from '~/components/blogcard';
+import { router } from 'expo-router';
 const TabOne = () => {
   return (
     <>
-      <View className="flex-1 bg-white">
+      <Pressable onPress={() => router.push('/blog/:id')} className="flex-1 bg-white">
         <Text className="  p-4 text-xl font-bold tracking-wider">
           Start your bloggin journey with InspireSphere
         </Text>
@@ -13,7 +14,7 @@ const TabOne = () => {
         <View className="flex-1">
           <FlatList data={data} renderItem={({ item }) => <BlogCard />} />
         </View>
-      </View>
+      </Pressable>
     </>
   );
 };
