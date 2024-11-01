@@ -1,12 +1,27 @@
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '~/components/context/AuthProvider';
 import { Redirect, router } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import * as ImagePicker from 'expo-image-picker';
 const CreateScreen = () => {
   const { authenticated, setAuthenticated } = useContext(AuthContext);
   const [selectedValue, setSelectedValue] = useState('');
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   const actions = [
     {
       text: 'Accessibility',
@@ -46,7 +61,7 @@ const CreateScreen = () => {
     return <Redirect href="/login" />;
   }
   return (
-    <View className="flex-1   bg-white">
+    <ScrollView showsVerticalScrollIndicator={false} className="flex-1   bg-white">
       <View className="mx-4 my-4 gap-4  ">
         <Text>Title</Text>
         <TextInput className="border border-gray-300 p-2 px-4" placeholder="Title..." />
@@ -63,7 +78,7 @@ const CreateScreen = () => {
       </View>
       <View className="mx-4 my-4 flex-row  gap-8  ">
         <Text>Images</Text>
-        <AntDesign name="upload" size={24} color="black" />
+        <AntDesign onPress={pickImage} name="upload" size={24} color="black" />
       </View>
       <Text className="mx-4 my-8">Category</Text>
       <View className="mx-4 border border-gray-300 ">
@@ -81,7 +96,7 @@ const CreateScreen = () => {
       <Pressable className="mx-4 my-8 flex-row items-center justify-center gap-2 rounded-lg bg-red-500 p-4 ">
         <Text className="text-xl font-bold text-white">Create</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 };
 
