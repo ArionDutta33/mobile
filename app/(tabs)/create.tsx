@@ -1,10 +1,12 @@
-import { View, Text, TextInput } from 'react-native';
-import React, { useContext } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '~/components/context/AuthProvider';
-import { Redirect } from 'expo-router';
-import { FloatingAction } from 'react-native-floating-action';
+import { Redirect, router } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
+import AntDesign from '@expo/vector-icons/AntDesign';
 const CreateScreen = () => {
   const { authenticated, setAuthenticated } = useContext(AuthContext);
+  const [selectedValue, setSelectedValue] = useState('');
   const actions = [
     {
       text: 'Accessibility',
@@ -36,7 +38,7 @@ const CreateScreen = () => {
       console.log('cam pressed');
     }
     if (name === 'camera') {
-      console.log('camera btn pressed');
+      router.push('/camera');
     }
   };
   console.log(authenticated);
@@ -59,11 +61,26 @@ const CreateScreen = () => {
           textAlignVertical="top"
         />
       </View>
-      <FloatingAction
-        onPressItem={handleFloatingButtonOnPress}
-        onPressMain={() => console.log('main btn')}
-        actions={actions}
-      />
+      <View className="mx-4 my-4 flex-row  gap-8  ">
+        <Text>Images</Text>
+        <AntDesign name="upload" size={24} color="black" />
+      </View>
+      <Text className="mx-4 my-8">Category</Text>
+      <View className="mx-4 border border-gray-300 ">
+        <Picker
+          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+          selectedValue={selectedValue}>
+          <Picker.Item label="Health & Wellness" value="Health & Wellness" />
+          <Picker.Item label="Science & Technology" value="Science & Technology" />
+          <Picker.Item label="Yoga & Spirituality" value="Yoga & Spirituality" />
+          <Picker.Item label="Food & Drink" value="Food & Drink" />
+          <Picker.Item label="Video Games" value="Video Games" />
+          <Picker.Item label="Travel & Friendship" value="Travel & Friendship" />
+        </Picker>
+      </View>
+      <Pressable className="mx-4 my-8 flex-row items-center justify-center gap-2 rounded-lg bg-red-500 p-4 ">
+        <Text className="text-xl font-bold text-white">Create</Text>
+      </Pressable>
     </View>
   );
 };
