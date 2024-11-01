@@ -4,12 +4,13 @@ import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 import { Image } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import AuthProvider from '~/components/context/AuthProvider';
+
 export default function TabLayout() {
-  return <Redirect href="/register" />;
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: 'blue',
       }}>
       <Tabs.Screen
         name="index"
@@ -45,7 +46,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'Third',
 
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
