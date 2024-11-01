@@ -1,5 +1,5 @@
 import '../global.css';
-
+import { ToastProvider } from 'react-native-toast-notifications';
 import { Stack } from 'expo-router';
 
 export const unstable_settings = {
@@ -9,10 +9,16 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-    </Stack>
+    <ToastProvider
+      textStyle={{ fontSize: 20 }}
+      offset={50} // offset for both top and bottom toasts
+      offsetTop={30}
+      offsetBottom={40}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </Stack>
+    </ToastProvider>
   );
 }

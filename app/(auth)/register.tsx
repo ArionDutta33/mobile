@@ -2,12 +2,14 @@ import { View, Text, TextInput, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Link, router } from 'expo-router';
 import axios from 'axios';
+import { useToast } from 'react-native-toast-notifications';
 const RegisterScreen = () => {
   const [fullname, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const toast = useToast();
 
   const registerUser = async () => {
     setLoading(true);
@@ -19,7 +21,15 @@ const RegisterScreen = () => {
       })
       .then((res) => {
         if (res.status === 201) {
+          toast.show('Registration successful', {
+            type: 'success',
+            animationType: 'slide-in',
+            duration: 1000,
+          });
           setError('');
+          setEmail('');
+          setPassword('');
+          setName('');
           setLoading(false);
           setTimeout(() => {
             router.push('/login');
@@ -28,6 +38,11 @@ const RegisterScreen = () => {
       })
       .catch((err) => {
         setError(err.response.data.message);
+        toast.show(err.response.data.message, {
+          type: 'danger',
+          animationType: 'slide-in',
+          duration: 1000,
+        });
         setLoading(false);
         console.log(err.response.data);
       });
