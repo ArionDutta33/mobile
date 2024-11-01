@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Pressable } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, router } from 'expo-router';
 import axios from 'axios';
 import { useToast } from 'react-native-toast-notifications';

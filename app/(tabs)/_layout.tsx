@@ -7,6 +7,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import AuthProvider from '~/components/context/AuthProvider';
 
 export default function TabLayout() {
+  // return <Redirect href="/(tabs)/create" />;
   return (
     <Tabs
       screenOptions={{
