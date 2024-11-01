@@ -5,7 +5,6 @@ import { TabBarIcon } from '../../components/TabBarIcon';
 import { Image } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 export default function TabLayout() {
-  return <Redirect href={'/blog/2'} />;
   return (
     <Tabs
       screenOptions={{

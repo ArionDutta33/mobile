@@ -1,9 +1,10 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import React from 'react';
+import { router } from 'expo-router';
 
 const BlogCard = () => {
   return (
-    <View className="mx-4 mt-10 rounded-t-lg    ">
+    <Pressable onPress={() => router.push('/blog/:id')} className="mx-4 mt-10 rounded-t-lg    ">
       <Image
         className="    h-80 w-auto rounded-lg"
         source={{
@@ -16,7 +17,7 @@ const BlogCard = () => {
       <Text className="p-2 text-xs  font-bold text-gray-500">
         Health & Wellness &#183; 5 min read
       </Text>
-    </View>
+    </Pressable>
   );
 };
 
