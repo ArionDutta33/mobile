@@ -4,9 +4,14 @@ import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 import { Image } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import AuthProvider from '~/components/context/AuthProvider';
+import AuthProvider, { AuthContext } from '~/components/context/AuthProvider';
+import { useContext } from 'react';
 
 export default function TabLayout() {
+  const { authenticated } = useContext(AuthContext);
+  if (!authenticated.user) {
+    return <Redirect href="/(auth)/login" />;
+  }
   // return <Redirect href="/(tabs)/create" />;
   return (
     <Tabs
