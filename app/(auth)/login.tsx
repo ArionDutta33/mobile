@@ -13,6 +13,14 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const loginUser = async () => {
+    if (!email || !password) {
+      Toast.show('Something went wrong', {
+        type: 'error',
+        animationType: 'slide-in',
+        duration: 1000,
+      });
+      return;
+    }
     setLoading(true);
     const input = await axios
       .post('http://192.168.1.4:3000/api/v1/auth/login', {

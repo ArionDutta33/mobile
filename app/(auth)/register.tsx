@@ -18,6 +18,14 @@ const RegisterScreen = () => {
 
   const registerUser = async () => {
     setLoading(true);
+    if (!fullname || !email || !password) {
+      toast.show('Something went wrong', {
+        type: 'error',
+        animationType: 'slide-in',
+        duration: 1000,
+      });
+      return;
+    }
     const imageToUpload = profilePic
       ? await uploadImage(profilePic)
       : {
