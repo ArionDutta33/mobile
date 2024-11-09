@@ -71,14 +71,6 @@ const RegisterScreen = () => {
       });
   };
 
-  //dummy
-  // const registerUser = async () => {
-  //   console.log('clicked');
-  //   console.log(fullname, email, password, profilePic);
-  // };
-
-  //image picker
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

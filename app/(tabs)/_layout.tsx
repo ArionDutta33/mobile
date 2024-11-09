@@ -3,8 +3,7 @@ import { Link, Redirect, Tabs } from 'expo-router';
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 import { Image } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import AuthProvider, { AuthContext } from '~/components/context/AuthProvider';
+import { AuthContext } from '~/components/context/AuthProvider';
 import { useContext } from 'react';
 
 export default function TabLayout() {
@@ -12,7 +11,6 @@ export default function TabLayout() {
   if (!authenticated.user) {
     return <Redirect href="/(auth)/login" />;
   }
-  // return <Redirect href="/(tabs)/create" />;
   return (
     <Tabs
       screenOptions={{
