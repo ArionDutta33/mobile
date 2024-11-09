@@ -39,7 +39,7 @@ const LoginScreen = () => {
           });
           console.log('logging authenticated', authenticated);
           setTimeout(() => {
-            router.push('/index');
+            router.push('/(tabs)/');
           }, 2000);
         }
       })
