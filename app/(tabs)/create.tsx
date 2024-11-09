@@ -5,58 +5,64 @@ import { Redirect, router } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import { uploadImage } from '~/libs/cloudinary';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const CreateScreen = () => {
   const { authenticated, setAuthenticated } = useContext(AuthContext);
   const [selectedValue, setSelectedValue] = useState('');
-  const [image, setImage] = useState<string | null>(null);
+  const [images, setImages] = useState<string | null>(null);
+  const [body, setBody] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  //create a post
+  const createPost = async () => {
+    const { authenticated } = useContext(AuthContext);
+    console.log(authenticated.token);
+    try {
+      setLoading(true);
+      if (!body || !selectedValue || !images) {
+        setLoading(false);
+        setError('All fields are required');
+        return;
+      }
+      setLoading(false);
+      const uploadedImages = await uploadImage(images);
+      console.log('uploaded to cloudinary', uploadedImages);
+      const postData = await axios.post(
+        'http://192.168.1.4:3000/api/v1/blogs',
+        {
+          body,
+          http: selectedValue,
+          images,
+        },
+        {
+          headers: {
+            Authorization: AsyncStorage.getItem('@auth'),
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
+      allowsMultipleSelection: true,
       aspect: [4, 3],
       quality: 1,
     });
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      result.assets.forEach((asset) => {
+        setImages(asset.uri);
+      });
     }
   };
 
-  const actions = [
-    {
-      text: 'Accessibility',
-      icon: require('assets/access.png'),
-      name: 'bt_accessibility',
-      position: 2,
-    },
-    {
-      text: 'Language',
-      icon: require('assets/splash.png'),
-      name: 'bt_language',
-      position: 1,
-    },
-    {
-      text: 'Camera',
-      icon: require('assets/potrait.png'),
-      name: 'camera',
-      position: 3,
-    },
-    {
-      text: 'Video',
-      icon: require('assets/video.png'),
-      name: 'bt_videocam',
-      position: 4,
-    },
-  ];
-  const handleFloatingButtonOnPress = (name: string) => {
-    if (name === 'bt_videocam') {
-      console.log('cam pressed');
-    }
-    if (name === 'camera') {
-      router.push('/camera');
-    }
-  };
-  console.log(authenticated);
   if (!authenticated.user) {
     return <Redirect href="/login" />;
   }
@@ -64,7 +70,12 @@ const CreateScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false} className="flex-1   bg-white">
       <View className="mx-4 my-4 gap-4  ">
         <Text>Title</Text>
-        <TextInput className="border border-gray-300 p-2 px-4" placeholder="Title..." />
+        <TextInput
+          value={title}
+          onChangeText={setTitle}
+          className="border border-gray-300 p-2 px-4"
+          placeholder="Title..."
+        />
       </View>
       <View className="mx-4 my-4 gap-4  ">
         <Text>Body</Text>
@@ -72,6 +83,8 @@ const CreateScreen = () => {
           className="border border-gray-300 p-2 px-4"
           placeholder="Body..."
           multiline
+          value={body}
+          onChangeText={setBody}
           numberOfLines={10}
           textAlignVertical="top"
         />
@@ -93,7 +106,9 @@ const CreateScreen = () => {
           <Picker.Item label="Travel & Friendship" value="Travel & Friendship" />
         </Picker>
       </View>
-      <Pressable className="mx-4 my-8 flex-row items-center justify-center gap-2 rounded-lg bg-red-500 p-4 ">
+      <Pressable
+        onPress={createPost}
+        className="mx-4 my-8 flex-row items-center justify-center gap-2 rounded-lg bg-red-500 p-4 ">
         <Text className="text-xl font-bold text-white">Create</Text>
       </Pressable>
     </ScrollView>

@@ -12,7 +12,7 @@ export const cld = new Cloudinary({
 
 
 
- export const uploadImage = async (file: string) => {
+ export const uploadImage = async (file: string|string[]) => {
     const options = {
       upload_preset: 'testing',
       unsigned: true,
