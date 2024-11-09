@@ -18,13 +18,20 @@ const RegisterScreen = () => {
 
   const registerUser = async () => {
     setLoading(true);
-    const uploadedPic = await uploadImage(profilePic);
+    const imageToUpload = profilePic
+      ? await uploadImage(profilePic)
+      : {
+          secure_url:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcZsL6PVn0SNiabAKz7js0QknS2ilJam19QQ&s',
+        };
     const input = await axios
       .post('http://192.168.1.4:3000/api/v1/auth/register', {
         fullname,
         email,
         password,
-        profilePic: uploadedPic.secure_url,
+        profilePic:
+          imageToUpload.secure_url ||
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcZsL6PVn0SNiabAKz7js0QknS2ilJam19QQ&s',
       })
       .then((res) => {
         if (res.status === 201) {
