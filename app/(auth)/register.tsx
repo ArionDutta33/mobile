@@ -3,21 +3,28 @@ import React, { useState } from 'react';
 import { Link, router } from 'expo-router';
 import axios from 'axios';
 import { useToast } from 'react-native-toast-notifications';
+import * as ImagePicker from 'expo-image-picker';
+import { cld, uploadImage } from '~/libs/cloudinary';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 const RegisterScreen = () => {
   const [fullname, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [profilePic, setProfilePic] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const toast = useToast();
 
   const registerUser = async () => {
     setLoading(true);
+    const uploadedPic = await uploadImage(profilePic);
     const input = await axios
       .post('http://192.168.1.4:3000/api/v1/auth/register', {
         fullname,
         email,
         password,
+        profilePic: uploadedPic.secure_url,
       })
       .then((res) => {
         if (res.status === 201) {
@@ -30,6 +37,7 @@ const RegisterScreen = () => {
           setEmail('');
           setPassword('');
           setName('');
+          setProfilePic('');
           setLoading(false);
           setTimeout(() => {
             router.push('/login');
@@ -48,11 +56,38 @@ const RegisterScreen = () => {
       });
   };
 
+  //dummy
+  // const registerUser = async () => {
+  //   console.log('clicked');
+  //   console.log(fullname, email, password, profilePic);
+  // };
+
+  //image picker
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setProfilePic(result.assets[0].uri);
+    }
+  };
+
   return (
     <View>
       <View className="mx-4 my-2 gap-2">
         <Text>Upload Avatar</Text>
-        <TextInput placeholder="Avatar" className="border border-gray-500 p-2" />
+        <View className="w-12 items-center justify-center rounded-full bg-red-500 p-2">
+          <AntDesign onPress={pickImage} name="user" size={24} color="white" />
+        </View>
+        {/* <TextInput placeholder="Avatar" className="border border-gray-500 p-2" /> */}
       </View>
       <View className="mx-4 my-2 gap-2">
         <Text>Full Name</Text>
